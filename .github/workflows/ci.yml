@@ -2,24 +2,17 @@ name: basa
 
 on:
     push:
-        branches: [master]
+        barnches: [master]
 
 jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: python info.py
-            - run: python files.py
-            
-    network:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: pip install --no-cache-dir -r reqmest.txt
-            - run: python ping.py
-
-
+            - run: docker build -t pings .
+            - run: docker images
+            # запускаем контейнер после просмотра то что он собрался
+            - run: docker run --rm pings
 
             
 
