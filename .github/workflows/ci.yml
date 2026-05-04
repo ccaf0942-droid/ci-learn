@@ -1,4 +1,4 @@
-name: defolt
+name: basa
 
 on:
     push:
@@ -9,10 +9,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: ls -la
-            - run: python --version
-            - run: python check.py
-
+            - run: python info.py
+            - run: python files.py
+            
+    network:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: pip install -r requests
+            - run: python ping.py
 
 
 
