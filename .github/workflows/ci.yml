@@ -16,7 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: pip install -r requests
+            - run: pip install --no-cache-dir -r reqmest.txt
             - run: python ping.py
 
 
