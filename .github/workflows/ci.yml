@@ -11,16 +11,16 @@ jobs:
             - uses: actions/checkout@v4
             - run: python hello.py
 
-time:
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v4
-        - run: python time.py
-        
-calc:
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v4
-        - run: python calc.py
+    time:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: python time.py
+            
+    calc:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: python calc.py
 
       
