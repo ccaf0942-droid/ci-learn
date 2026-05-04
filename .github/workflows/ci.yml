@@ -1,4 +1,4 @@
-name: piplene
+name: defolt
 
 on:
     push:
@@ -9,18 +9,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: python hello.py
+            - run: ls -la
+            - run: python --version
+            - run: python check.py
 
-    time:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: python time.py
+
+
+
             
-    calc:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: python calc.py
 
-      
+
+
