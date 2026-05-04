@@ -1,20 +1,14 @@
-name: basa
+name: select
 
 on:
     push:
-        barnches: [master]
+        branches: [master]
 
 jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t pings .
+            - run: docker build -t scope .
             - run: docker images
-            # запускаем контейнер после просмотра то что он собрался
-            - run: docker run --rm pings
-
-            
-
-
-
+            - run: docker run --rm scope
