@@ -15,7 +15,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker run --rm aa
+            - run: pip install requests
+            - run: python chels.py
 
 # 2ой сопособ написания (Последовательный)
 
