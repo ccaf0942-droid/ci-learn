@@ -1,4 +1,4 @@
-name: select
+name: hhe
 
 on:
     push:
@@ -9,6 +9,5 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t scope .
-            - run: docker images
-            - run: docker run --rm scope
+            - run: docker build -t steps . 
+            - run: python ping.py
