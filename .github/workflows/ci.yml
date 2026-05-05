@@ -10,7 +10,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - run: docker build -t check .
-            - run: docker image 
+            - run: docker image list
 
             # Делаем вторую джобу по заданию ты сам просил это сделать для запуска контейнера
 
@@ -18,5 +18,5 @@ jobs:
         runs-on: ubuntu-latest 
         steps:
             - uses: actions/checkout@v4
-            - run: docker build runs .
+            - run: docker build -t runs .
             - run: docker run --rm runs
