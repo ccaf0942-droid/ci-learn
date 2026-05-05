@@ -1,4 +1,4 @@
-name: off
+name: BASA
 
 on:
     push:
@@ -9,23 +9,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t aa .        
+            - run: docker build -t check .
+            - run: docker image 
+
+            # Делаем вторую джобу по заданию ты сам просил это сделать для запуска контейнера
 
     play:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-latest 
         steps:
             - uses: actions/checkout@v4
-            - run: pip install requests
-            - run: python chels.py
-
-# 2ой сопособ написания (Последовательный)
-
-    build-run:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: docker build -t aas .
-            - run: docker run --rm aas
-            
-
-
+            - run: docker build runs .
+            - run: docker run --rm runs
