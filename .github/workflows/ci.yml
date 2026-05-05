@@ -1,4 +1,4 @@
-name: dfsa
+name: off
 
 on:
     push:
@@ -9,12 +9,22 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t app .
-            
-    ff:
+            - run: docker build -t aa .        
+
+    play:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: pip install requests
-            - run: python chels.py
+            - run: docker run --rm aa
+
+# 2ой сопособ написания (Последовательный)
+
+    build-run:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: docker build -t aa
+            - run: docker run --rm aa
+            
+
 

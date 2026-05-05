@@ -8,3 +8,5 @@ try:
 except Exception as e:
     print(f"Ошибка: {e}")
     print("?NODOWN?")
+
+print("GELLO WOTROL>FDOP!!!!!!!!")
