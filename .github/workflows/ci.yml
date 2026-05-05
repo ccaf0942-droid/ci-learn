@@ -1,4 +1,4 @@
-name: hhe
+name: dfsa
 
 on:
     push:
@@ -9,5 +9,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t steps . 
-            - run: python ping.py
+            - run: docker build -t app .
+            
+    ff:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: pip install requests
+            - run: python chels.py
+
