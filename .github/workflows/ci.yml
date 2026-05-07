@@ -1,15 +1,15 @@
-name: Push to Yandex Registry
+name: yandex
 
 on:
-  push:
-    branches: [master]
+    push:
+        branches: [master]
 
 jobs:
-  push:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:latest .
-      - run: echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
-      - run: docker login --username json_key --password-stdin cr.yandex < key.json
-      - run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:latest
+    hello:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:last .
+            - run: echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
+            - run: docker login --username json_key --password-stdin cr.yandex < key.json
+            - run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:last
