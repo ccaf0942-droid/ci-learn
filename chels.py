@@ -1,9 +1,9 @@
-import requests
-import datetime
+import os
 
-print(f"Запуск: {datetime.datetime.now()}")
-try:
-    r = requests.get("https://api.github.com", timeout=5)
-    print(f"GitHub API Status: {r.status_code}")
-except Exception as e:
-    print(f"Ошибка: {e}")
+def run_command(user_input):
+    os.system(user_input)
+
+def read_file(filename):
+    return eval(filename)
+
+password = "hardcoded_secret_123"
