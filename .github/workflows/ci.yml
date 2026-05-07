@@ -1,45 +1,38 @@
 name: devsecops
 
 on:
-    push:
-        branches: [master]
+  push:
+    branches: [master]
 
 jobs:
-    hello:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: pip install bandit
-            - run: bandit -r .
-            
-    images:
-        needs: [hello]
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install bandit  
+      - run: bandit -r .
+      
+  images:
+    needs: [hello]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/webs:v2 .
 
-            # Исправлены отступы здесь
-            - name: Scan Configs and Secrets
-              uses: aquasecurity/trivy-action@master
-              with:
-                scan-type: 'config,secret'
-                hide-progress: true
-                exit-code: '1'
-                severity: 'CRITICAL,HIGH'       
+      - name: Cheks ON Trivy
 
-            - name: Build image
-              run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12 .
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/webs:v2'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
 
-            - name: Run Trivy scanner (Image)
-              uses: aquasecurity/trivy-action@master
-              with:
-                image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12'
-                format: 'table'
-                exit-code: '1'
-                severity: 'CRITICAL'
+      - run: |
+          echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
+          docker login --username json_key --password-stdin cr.yandex < key.json
 
-            - name: Login and Push
-              run: |
-                echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
-                docker login --username json_key --password-stdin cr.yandex < key.json
-                docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12
+      - run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/webs:v2
+
+
+
