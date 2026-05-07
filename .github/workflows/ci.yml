@@ -1,4 +1,4 @@
-name: BASA
+name: popit
 
 on:
     push:
@@ -9,14 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t check .
+            - run: docker build -t apps .
+            # От себя добавил проверку на то что собрался ли образ или нет чтобы потом при ошибки можно было легче ее отладить
             - run: docker image list
-
-            # Делаем вторую джобу по заданию ты сам просил это сделать для запуска контейнера
-
-    play:
-        runs-on: ubuntu-latest 
-        steps:
-            - uses: actions/checkout@v4
-            - run: docker build -t runs .
-            - run: docker run --rm runs
+            - run: docker run --rm apps
