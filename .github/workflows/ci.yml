@@ -1,4 +1,4 @@
-name: last
+name: ubuntu
 
 on:
     push:
@@ -9,7 +9,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:v8 .
+            - run: pip install bandit
+            - run: bandit -r .
+            
+    image:
+        needs: [hello]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/app:v10 .
             - run: echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
             - run: docker login --username json_key --password-stdin cr.yandex < key.json
-            - run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/myapp:v8
+            - run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/app:v10
+
