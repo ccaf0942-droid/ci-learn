@@ -18,23 +18,28 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            # 1. Собираем образ (используем переменную для удобства)
-            - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12 .
+            # Исправлены отступы здесь
+            - name: Scan Configs and Secrets
+              uses: aquasecurity/trivy-action@master
+              with:
+                scan-type: 'config,secret'
+                hide-progress: true
+                exit-code: '1'
+                severity: 'CRITICAL,HIGH'       
 
-            # 2. Сканируем тот же самый образ, который только что собрали
-            - name: Run Trivy scanner
+            - name: Build image
+              run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12 .
+
+            - name: Run Trivy scanner (Image)
               uses: aquasecurity/trivy-action@master
               with:
                 image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12'
                 format: 'table'
-                exit-code: '1' # Уронит пайплайн, если найдет CRITICAL
+                exit-code: '1'
                 severity: 'CRITICAL'
 
-            # 3. Пушим только если сканер прошел успешно
-            - name: Login to YC Registry
+            - name: Login and Push
               run: |
                 echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
                 docker login --username json_key --password-stdin cr.yandex < key.json
-            
-            - name: Push image
-              run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12
+                docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12
