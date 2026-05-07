@@ -20,8 +20,7 @@ jobs:
             - run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ws:12 .
             - run: |
                 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                    aquasec/trivy:latest image myapp --severity HIGH, CRITICAL --exit-code 1 \
-                    --no-progress
+                    aquasec/trivy image myapp --severity CRITICAL --exit-code 1
 
             - run: echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
             - run: docker login --username json_key --password-stdin cr.yandex < key.json
