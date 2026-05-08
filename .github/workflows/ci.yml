@@ -35,7 +35,6 @@ jobs:
 
       - name: Push
         run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/webs:01
-        run: python chels.py
 
 
 
