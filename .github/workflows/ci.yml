@@ -1,4 +1,4 @@
-name: devsecops
+name: devsec
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Gitleakc-check
+      - name: Checks secrets
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -22,7 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Scan in Bandit
+
+      - name: Run Bandit
         run: |
           pip install bandit
           bandit -r .
@@ -32,27 +33,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build Image
-        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/secrets:v1 .
 
-      - name: Scan Image in Trivy
+      - name: Build Image
+        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/you:1 .
+
+      - name: Scan Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/secrets:v1'
+          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/you:1'
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL'
 
-      - name: Registry Docker For Yandex.Cloud
+      - name: Docker Login
         run: |
-          echo '${{ secrets.YC_PRIVATE_KEY }}' > key.json
-          docker login --username json_key --password-stdin cr.yandex < key.json
+          echo '${{ secrets.YC_PRIVATE_KEY }}' > docker login --username json_key --password-stdin cr.yandex
 
       - name: Docker Push
-        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/secrets:v1
-      - name: RUN
-        run: docker run --rm cr.yandex/${{ secrets.YC_REGISTRY_ID }}/secrets:v1
-
+        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/you:1
         
 
 
