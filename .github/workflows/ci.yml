@@ -51,5 +51,7 @@ jobs:
 
       - name: docker push 
         run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/pop:v2
+      - name: image RUN
+        run: docker run --rm cr.yandex/${{ secrets.YC_REGISTRY_ID }}/pop:v2
 
       
