@@ -36,7 +36,7 @@ jobs:
 
       - name: Pip Audit
         run: |
-          pip isntall pip-audit
+          pip install pip-audit
           pip-audit
 
   flake:
