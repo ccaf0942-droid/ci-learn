@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Gitleaks Run
+      - name: Gitleaks Checks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,19 +27,19 @@ jobs:
         run: |
           pip install bandit
           bandit -r .
-  
-  safety:
+
+  pip:
     needs: [secrets]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pip Audit
+      - name: Pip-auidt Run
         run: |
           pip install pip-audit
-          pip-audit --requirement requirements.txt
+          pip-audit --requirement requitements.txt
 
-  flake:
+  falke:
     needs: [secrets]
     runs-on: ubuntu-latest
     steps:
@@ -48,21 +48,21 @@ jobs:
       - name: Flake8 Run
         run: |
           pip install flake8
-          flake8 . --max-line-length=120
+          flake8 . --max-line-lenght
 
   image:
-    needs: [flake, safety, bandit]
+    needs: [falke, bandit, pip]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Image Build
-        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ff:v1 .
 
-      - name: Trivy Checks Image
+      - name: Docker Image Build
+        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/v:1 .
+
+      - name: Trivy Scan Image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ff:v1'
+          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/v:1'
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL'
@@ -71,9 +71,6 @@ jobs:
         run: echo '${{ secrets.YC_PRIVATE_KEY }}' | docker login --username json_key --password-stdin cr.yandex
 
       - name: Docker Push
-        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/ff:v1
-
-      
-
+        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/v:1
   
       
