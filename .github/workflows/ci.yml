@@ -48,7 +48,7 @@ jobs:
       - name: Flake8 Run
         run: |
           pip install flake8
-          flake8 . --max-line-lenght=120
+          flake8 . --max-line-length=120
 
   image:
     needs: [falke, bandit, pip]
