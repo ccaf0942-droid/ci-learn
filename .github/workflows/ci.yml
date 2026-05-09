@@ -34,12 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Safety Run
-        env:
-          SAFETY_ANONYMOUS_TELEMETRY: "1"
+      - name: Pip Audit
         run: |
-          pip install safety
-          safety scan --file requirements.txt
+          pip isntall pip-audit
+          pip-audit
 
   flake:
     needs: [secrets]
