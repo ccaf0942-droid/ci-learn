@@ -35,6 +35,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Safety Run
+        env:
+          SAFETY_ANONYMOUS_TELEMETRY: "1"
         run: |
           pip install safety
           safety scan --file requirements.txt
