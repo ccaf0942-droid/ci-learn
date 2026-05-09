@@ -37,7 +37,7 @@ jobs:
       - name: Safety Run
         run: |
           pip install safety
-          safety check
+          safety scan --file requirements.txt
 
   flake:
     needs: [secrets]
