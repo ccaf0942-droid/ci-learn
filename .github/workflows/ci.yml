@@ -37,7 +37,7 @@ jobs:
       - name: Pip-auidt Run
         run: |
           pip install pip-audit
-          pip-audit --requirement requitements.txt
+          pip-audit --requirement requirements.txt
 
   falke:
     needs: [secrets]
@@ -48,7 +48,7 @@ jobs:
       - name: Flake8 Run
         run: |
           pip install flake8
-          flake8 . --max-line-lenght
+          flake8 . --max-line-lenght=120
 
   image:
     needs: [falke, bandit, pip]
