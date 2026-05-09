@@ -37,7 +37,7 @@ jobs:
       - name: Pip Audit
         run: |
           pip install pip-audit
-          pip-audit
+          pip-audit --requirement requirements.txt
 
   flake:
     needs: [secrets]
