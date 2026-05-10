@@ -62,7 +62,7 @@ jobs:
       - name: Trivy Scan Image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/v:1'
+          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/vrwdsfsad:1'
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL'
@@ -71,6 +71,4 @@ jobs:
         run: echo '${{ secrets.YC_PRIVATE_KEY }}' | docker login --username json_key --password-stdin cr.yandex
 
       - name: Docker Push
-        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/v:1
-  
-      
+        run: docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/vrwdsfsad:1
