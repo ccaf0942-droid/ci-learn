@@ -73,4 +73,3 @@ jobs:
         run: |
           docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v4
 
- 
