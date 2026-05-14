@@ -1,1 +1,8 @@
-requests
+# HTTP-запросы к Yandex Cloud API
+requests==2.31.0
+
+# Загрузка переменных окружения из .env-файла
+python-dotenv==1.0.0
+
+# Retry-логика для устойчивости к временным ошибкам API
+tenacity==8.2.0
