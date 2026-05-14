@@ -34,8 +34,8 @@ jobs:
       - name: Run pip audit
         run: |
           pip install pip-audit
-          pip-audit
-    
+          pip-audit --requirement requirements.txt      
+
   flake8:
     needs: [gitleaks]
     runs-on: ubuntu-latest
