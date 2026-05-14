@@ -15,6 +15,7 @@ CLOUD_ID = os.getenv("CLOUD_ID")
 
 logging.basicConfig(level=logging.WARNING, format='%(message)s')
 
+
 def connect_db():
     """Подключение к PostgreSQL. Если не удалось — возвращает None"""
     try:
@@ -30,6 +31,7 @@ def connect_db():
     except Exception as e:
         print(f"БД недоступна: {e}. Сканер работает без записи в БД.")
         return None
+
 
 def save_scan_result(conn, vm_name, open_ports, sa_role_cloud, sa_role_folder,
                      snapshot_status, snapshot_encrypted, imdsv2_status,
@@ -70,6 +72,7 @@ def save_scan_result(conn, vm_name, open_ports, sa_role_cloud, sa_role_folder,
     except Exception as e:
         print(f"Ошибка сохранения в БД: {e}")
 
+
 def yc_get(url, params=None):
     headers = {"Authorization": f"Bearer {TOKEN}"}
     try:
@@ -80,9 +83,11 @@ def yc_get(url, params=None):
         logging.error(f"API request failed: {e}")
         raise
 
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
 def yc_get_retry(url, params=None):
     return yc_get(url, params)
+
 
 def get_all_pages(url, params, key):
     items = []
@@ -97,25 +102,31 @@ def get_all_pages(url, params, key):
             break
     return items
 
+
 def folder_bindings_get(f_id):
     u = f"https://resource-manager.api.cloud.yandex.net/resource-manager/v1/folders/{f_id}:listAccessBindings"
     return get_all_pages(u, {}, "accessBindings")
+
 
 def cloud_bindings_get(c_id):
     u = f"https://resource-manager.api.cloud.yandex.net/resource-manager/v1/clouds/{c_id}:listAccessBindings"
     return get_all_pages(u, {}, "accessBindings")
 
+
 def compute_get(f_id):
     u = "https://compute.api.cloud.yandex.net/compute/v1/instances"
     return get_all_pages(u, {"folderId": f_id}, "instances")
+
 
 def snapshot_get(f_id):
     u = "https://compute.api.cloud.yandex.net/compute/v1/snapshots"
     return get_all_pages(u, {"folderId": f_id}, "snapshots")
 
+
 def security_group_get(f_id):
     u = "https://vpc.api.cloud.yandex.net/vpc/v1/securityGroups"
     return get_all_pages(u, {"folderId": f_id}, "securityGroups")
+
 
 def get_all_images(f_id):
     imgs = {}
@@ -125,6 +136,7 @@ def get_all_images(f_id):
     for i in get_all_pages(u, {"folderId": "standard-images"}, "images"):
         imgs[i["id"]] = i
     return imgs
+
 
 def is_outdated_os(img):
     if not img:
@@ -136,6 +148,7 @@ def is_outdated_os(img):
             return True
     return False
 
+
 folder_bindings = folder_bindings_get(FOLDER_ID)
 cloud_bindings = cloud_bindings_get(CLOUD_ID)
 compute = compute_get(FOLDER_ID)
@@ -145,6 +158,7 @@ images_cache = get_all_images(FOLDER_ID)
 
 dangerous_ports = {"SSH":22, "RDP":3389, "PostgreSQL":5432, "MySQL":3306, "MongoDB":27017, "Redis":6379}
 
+
 def checks_pub_ip(i):
     ips = []
     for n in i.get("networkInterfaces", []):
@@ -152,9 +166,10 @@ def checks_pub_ip(i):
         if ip:
             ips.append(ip)
     if ips:
-        print(f"  Публичные IP: {ips}")
+        print(f"Публичные IP: {ips}")
     else:
-        print("  Публичных IP нет")
+        print("Публичных IP нет")
+
 
 def checks_security_group(sg_ids, sg_all):
     ports_open = {n:False for n in dangerous_ports}
@@ -188,7 +203,7 @@ def checks_security_group(sg_ids, sg_all):
             try:
                 fp = int(fv or 0)
                 tp = int(tv or 0)
-            except:
+            except Exception:
                 continue
             for name, p in dangerous_ports.items():
                 if fp == p or tp == p:
@@ -207,6 +222,7 @@ def checks_security_group(sg_ids, sg_all):
         print("  Широких правил портов: нет")
     return [name for name, op in ports_open.items() if op], all_open
 
+
 def checks_snapshot(snaps, vm):
     disks = []
     boot = vm.get("bootDisk", {}).get("diskId")
@@ -215,36 +231,46 @@ def checks_snapshot(snaps, vm):
     for sd in vm.get("secondaryDisks", []):
         if sd.get("diskId"):
             disks.append(sd.get("diskId"))
+
     snapshot_found = False
     snapshot_ok = False
     snapshot_encrypted = False
+
     for d in disks:
         for s in snaps:
             if s.get("sourceDiskId") == d:
                 snapshot_found = True
+
                 st = s.get("status")
                 cr = s.get("createdAt")
+
                 if st == "READY":
                     snapshot_ok = True
+
                 if s.get("kmsKeyId"):
                     snapshot_encrypted = True
+
                 if st != "READY":
                     print(f"  Снапшот: статус {st}")
                 else:
-                    print(f"  Снапшот: ГОТОВ")
+                    print("  Снапшот: ГОТОВ")
                 try:
                     d1 = datetime.fromisoformat(cr.replace('Z', '+00:00'))
                     days = (datetime.now() - d1.replace(tzinfo=None)).days
+
                     if days > 30:
                         print(f"  Снапшот: старый ({days} дней)")
                     else:
                         print(f"  Снапшот: свежий ({days} дней)")
-                except:
+
+                except Exception:
                     print("  Снапшот: ошибка расчета даты")
+
                 if s.get("kmsKeyId"):
                     print(f"  Снапшот: ЗАШИФРОВАН")
                 else:
                     print(f"  Снапшот: НЕ ЗАШИФРОВАН")
+
         if not snapshot_found:
             print(f"  Снапшотов для диска {d}: НЕТ")
     if not snapshot_found:
@@ -253,6 +279,7 @@ def checks_snapshot(snaps, vm):
         return "ГОТОВ", snapshot_encrypted
     else:
         return "НЕ ГОТОВ", snapshot_encrypted
+
 
 def checks_bindings(level, name, sid, out):
     for b in level:
@@ -263,17 +290,20 @@ def checks_bindings(level, name, sid, out):
     else:
         print(f"  Ролей SA на уровне {name}: нет")
 
+
 def check_userdata(vm):
     ud = vm.get("metadata", {}).get("user-data", "")
     if not ud:
         print("  User-data: пусто")
         return
+
     pat = ["password", "token", "secret", "api_key", "BEGIN RSA PRIVATE KEY"]
     for p in pat:
         if re.search(p, ud, re.IGNORECASE):
             print(f"  User-data: ОБНАРУЖЕН СЕКРЕТ! ({p})")
             return
     print("  User-data: секретов не найдено")
+
 
 def check_imdsv2(vm):
     m = vm.get("metadataOptions", {}).get("metadataMode")
@@ -284,6 +314,7 @@ def check_imdsv2(vm):
         print(f"  IMDSv2: НЕ ВКЛЮЧЕНА (режим: {m})")
         return f"НЕ ВКЛЮЧЕНА ({m})"
 
+
 def check_disk_type(vm):
     t = vm.get("bootDisk", {}).get("typeId")
     if t == "network-ssd":
@@ -292,6 +323,7 @@ def check_disk_type(vm):
         print(f"  Загрузочный диск: HDD (рекомендуется заменить на SSD)")
     else:
         print(f"  Загрузочный диск: тип {t}")
+
 
 def check_egress(sg_ids, sg_all):
     for sid in sg_ids:
@@ -305,6 +337,7 @@ def check_egress(sg_ids, sg_all):
                             return
                             
     print("  EGRESS правила с 0.0.0.0/0: нет")
+
 
 def checks_compute():
     db_conn = connect_db()
@@ -385,7 +418,8 @@ def checks_compute():
 
     if db_conn:
         db_conn.close()
-        print("\n🔌 Подключение к БД закрыто")
+        print("Подключение к БД закрыто")
+
 
 def main():
     checks_compute()
