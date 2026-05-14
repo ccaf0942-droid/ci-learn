@@ -65,7 +65,7 @@ def save_scan_result(conn, vm_name, open_ports, sa_role_cloud, sa_role_folder,
         """, (vm_name, open_ports, sa_role_cloud, sa_role_folder,
               snapshot_status, snapshot_encrypted, imdsv2_status,
               public_ip, os_status))
-              
+      
         conn.commit()
         cur.close()
         print(f"Результаты для {vm_name} сохранены в БД")
@@ -156,8 +156,7 @@ snapshot = snapshot_get(FOLDER_ID)
 security_group = security_group_get(FOLDER_ID)
 images_cache = get_all_images(FOLDER_ID)
 
-dangerous_ports = {"SSH":22, "RDP":3389, "PostgreSQL":5432, "MySQL":3306, "MongoDB":27017, "Redis":6379}
-
+dangerous_ports = {"SSH": 22, "RDP": 3389, "PostgreSQL": 5432, "MySQL": 3306, "MongoDB": 27017, "Redis": 6379}
 
 def checks_pub_ip(i):
     ips = []
@@ -172,7 +171,7 @@ def checks_pub_ip(i):
 
 
 def checks_security_group(sg_ids, sg_all):
-    ports_open = {n:False for n in dangerous_ports}
+    ports_open = {n: False for n in dangerous_ports}
     all_open = False
     for sid in sg_ids:
         sg = None
@@ -182,11 +181,11 @@ def checks_security_group(sg_ids, sg_all):
                 break
         if not sg:
             continue
-        
+
         for r in sg.get("rules", []):
             if r.get("direction") != "INGRESS":
                 continue
-            
+
             cidrs = r.get("cidrBlocks", {}).get("v4CidrBlocks", [])
             if "0.0.0.0/0" not in cidrs:
                 continue
@@ -267,9 +266,9 @@ def checks_snapshot(snaps, vm):
                     print("  Снапшот: ошибка расчета даты")
 
                 if s.get("kmsKeyId"):
-                    print(f"  Снапшот: ЗАШИФРОВАН")
+                    print("  Снапшот: ЗАШИФРОВАН")
                 else:
-                    print(f"  Снапшот: НЕ ЗАШИФРОВАН")
+                    print("  Снапшот: НЕ ЗАШИФРОВАН")
 
         if not snapshot_found:
             print(f"  Снапшотов для диска {d}: НЕТ")
@@ -318,9 +317,9 @@ def check_imdsv2(vm):
 def check_disk_type(vm):
     t = vm.get("bootDisk", {}).get("typeId")
     if t == "network-ssd":
-        print(f"  Загрузочный диск: SSD")
+        print("  Загрузочный диск: SSD")
     elif t == "network-hdd":
-        print(f"  Загрузочный диск: HDD (рекомендуется заменить на SSD)")
+        print("  Загрузочный диск: HDD (рекомендуется заменить на SSD)")
     else:
         print(f"  Загрузочный диск: тип {t}")
 
@@ -335,7 +334,7 @@ def check_egress(sg_ids, sg_all):
                         if "0.0.0.0/0" in cidrs:
                             print(f"  EGRESS правило с 0.0.0.0/0 в группе {sid}: ЕСТЬ")
                             return
-                            
+
     print("  EGRESS правила с 0.0.0.0/0: нет")
 
 
@@ -426,6 +425,7 @@ def main():
     print("\n" + "=" * 60)
     print("ПРОВЕРКА ЗАВЕРШЕНА")
     print("=" * 60)
+
 
 if __name__ == "__main__":
     main()
