@@ -65,7 +65,7 @@ def save_scan_result(conn, vm_name, open_ports, sa_role_cloud, sa_role_folder,
         """, (vm_name, open_ports, sa_role_cloud, sa_role_folder,
               snapshot_status, snapshot_encrypted, imdsv2_status,
               public_ip, os_status))
-      
+  
         conn.commit()
         cur.close()
         print(f"Результаты для {vm_name} сохранены в БД")
@@ -157,6 +157,7 @@ security_group = security_group_get(FOLDER_ID)
 images_cache = get_all_images(FOLDER_ID)
 
 dangerous_ports = {"SSH": 22, "RDP": 3389, "PostgreSQL": 5432, "MySQL": 3306, "MongoDB": 27017, "Redis": 6379}
+
 
 def checks_pub_ip(i):
     ips = []
