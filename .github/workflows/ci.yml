@@ -26,16 +26,16 @@ jobs:
           pip install bandit
           bandit -r .
 
-  safety:
+  pip:
     needs: [gitleaks]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Safety Check
+      - name: Run pip audit
         run: |
-          pip install safety
-          safety check
-
+          pip install pip-audit
+          pip-audit
+    
   flake8:
     needs: [gitleaks]
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
           flake8 . --max-line-length=120
 
   build:
-    needs: [bandit, safety, flake8]
+    needs: [bandit, pip, flake8]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
