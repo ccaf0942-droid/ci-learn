@@ -6,6 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
 import psycopg2
+import time
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ logging.basicConfig(level=logging.WARNING, format='%(message)s')
 
 
 def connect_db():
-    """Подключение к PostgreSQL. Если не удалось — возвращает None"""
+    time.sleep(5)
     try:
         conn = psycopg2.connect(
             host=os.getenv("DB_HOST", "db"),
