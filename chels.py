@@ -65,7 +65,7 @@ def save_scan_result(conn, vm_name, open_ports, sa_role_cloud, sa_role_folder,
         """, (vm_name, open_ports, sa_role_cloud, sa_role_folder,
               snapshot_status, snapshot_encrypted, imdsv2_status,
               public_ip, os_status))
-  
+
         conn.commit()
         cur.close()
         print(f"Результаты для {vm_name} сохранены в БД")
