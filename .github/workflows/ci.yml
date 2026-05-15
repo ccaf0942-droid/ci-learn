@@ -71,9 +71,4 @@ jobs:
 
       - name: Docker Push Yandex.cloud
         run: |
-<<<<<<< HEAD
           docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v123
-
-=======
-          docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v123
->>>>>>> 550b3ad78632d4de4ca704b44b2744ad3290c62
