@@ -54,21 +54,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker Image
-<<<<<<< HEAD
-        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v111 .
-=======
-        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v11 .
->>>>>>> 54babfef25b85d7ce53098a7beb8379df2f06237
+        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v15 .
 
       - uses: actions/checkout@v4
       - name: Trivy Scan
         uses: aquasecurity/trivy-action@master
         with:
-<<<<<<< HEAD
-          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v111'
-=======
-          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v11'
->>>>>>> 54babfef25b85d7ce53098a7beb8379df2f06237
+          image-ref: 'cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v15'
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL'
@@ -79,9 +71,5 @@ jobs:
         
       - name: Docker Push Yandex.cloud
         run: |
-<<<<<<< HEAD
-          docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v111
-=======
-          docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v11
->>>>>>> 54babfef25b85d7ce53098a7beb8379df2f06237
+          docker push cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v15
 
