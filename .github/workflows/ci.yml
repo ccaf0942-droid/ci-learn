@@ -54,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker Image
-        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v22 .
+        run: docker build -t cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v123
 
       - uses: actions/checkout@v4
       - name: Trivy Scan
