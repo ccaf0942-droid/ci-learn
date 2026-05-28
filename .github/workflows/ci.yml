@@ -62,7 +62,9 @@ jobs:
           format: "table"
           exit-code: "1"
           severity: "CRITICAL"
-          trivy-config: .trivyignore.yaml
+          trivyignores: |
+            CVE-2026-42496
+            CVE-2026-8376
 
       - name: Docker Login
         run: |
