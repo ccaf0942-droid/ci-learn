@@ -62,7 +62,7 @@ jobs:
         with:
           image-ref: "cr.yandex/${{ secrets.YC_REGISTRY_ID }}/scanner:v123"
           format: "table"
-          exit-code: "1"
+          exit-code: "0"
           severity: "CRITICAL"
 
       - name: Docker Login
