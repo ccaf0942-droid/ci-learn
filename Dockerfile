@@ -4,7 +4,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip==25.0.1 && \
     pip install --no-cache-dir -r requirements.txt && \
-    rm -rf /root/.cache/pip
+    rm -rf /root/.cache/pip && \
+    apt-get remove -y perl-base && \
+    apt-get autoremove -y 
 
 COPY chels.py .
 
